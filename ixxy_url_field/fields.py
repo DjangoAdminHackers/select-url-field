@@ -28,7 +28,6 @@ class IxxyURLField(models.CharField):
         defaults.update(kwargs)
         from cms.admin_views import get_linklist_context
         linklists = get_linklist_context()
-        print linklists
         choices = []
         keys = ['links', 'documents', 'secure_documents', ]
         for key in keys:
@@ -36,7 +35,6 @@ class IxxyURLField(models.CharField):
             choices.append(['', ''])
         
         return ChoiceWithOtherField(choices=choices)
-        #return super(IxxyURLField, self).formfield(**defaults)
 
 
     def to_python(self, value):
