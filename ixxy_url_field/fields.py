@@ -10,7 +10,7 @@ from django.template.defaultfilters import filesizeformat
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import smart_unicode
 
-from custom_site.choice_with_other import ChoiceWithOtherField
+from ixxy_url_field.choice_with_other import ChoiceWithOtherField
 
 class IxxyURLField(models.CharField):
     description = _("URL")
@@ -74,3 +74,6 @@ class IxxyURLFormField(forms.CharField):
     def __init__(self, max_length=None, min_length=None, *args, **kwargs):
         super(IxxyURLFormField, self).__init__(max_length, min_length, *args, **kwargs)
         self.validators.append(IxxyURLValidator())
+
+from south.modelsinspector import add_introspection_rules
+add_introspection_rules([], ["^ixxy_url_field\.fields\.IxxyURLField"])
