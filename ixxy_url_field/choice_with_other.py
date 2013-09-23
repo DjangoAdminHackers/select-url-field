@@ -9,7 +9,7 @@ class ChoiceWithOtherWidget(forms.MultiWidget):
     def __init__(self, choices, attrs=None):
         widgets = [
             forms.Select(choices=choices),
-            forms.TextInput
+            forms.TextInput(attrs={'size':'80'})
         ]
         self.choices = choices
         super(ChoiceWithOtherWidget, self).__init__(widgets, attrs=attrs)
