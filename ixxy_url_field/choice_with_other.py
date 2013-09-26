@@ -57,10 +57,10 @@ class ChoiceWithOtherField(forms.MultiValueField):
         super(ChoiceWithOtherField, self).__init__(widget=widget, fields=fields, *args, **kwargs)
 
     def compress(self, value):
-        if self._was_required and not value or value[0] in (None, ''):
+        if self._was_required and (not value or value[0] in (None, '')):
             raise forms.ValidationError(self.error_messages['required'])
         if not value:
-            return [None, u'']
+            return ''
 
         if force_unicode(value[0]) == OTHER_CHOICE:
             return value[1]

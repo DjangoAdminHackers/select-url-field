@@ -34,7 +34,8 @@ class IxxyURLField(models.CharField):
             choices.extend([(link[1], link[0]) for link in linklists[key] or []])
             choices.append(['', ''])
         
-        return ChoiceWithOtherField(choices=choices)
+        required = not self.blank
+        return ChoiceWithOtherField(choices=choices, required=required)
 
 
     def to_python(self, value):
