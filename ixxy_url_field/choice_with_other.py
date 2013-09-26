@@ -2,7 +2,7 @@ from django import forms
 from django.conf import settings
 from django.utils.encoding import force_unicode
 
-OTHER_CHOICE = '__other__'
+OTHER_CHOICE = ''
 
 class ChoiceWithOtherWidget(forms.MultiWidget):
     """MultiWidget for use with ChoiceWithOtherField."""
@@ -46,7 +46,7 @@ class ChoiceWithOtherField(forms.MultiValueField):
                 break
         if not has_empty_choice:
             choices.insert(0, ('', '---------'))
-        choices.append((OTHER_CHOICE, 'Other: '))
+        #choices.append((OTHER_CHOICE, 'Other: '))
         fields = [
             forms.ChoiceField(choices=choices),
             forms.CharField(required=False)
