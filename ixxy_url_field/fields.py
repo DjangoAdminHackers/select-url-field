@@ -4,12 +4,12 @@ import os.path
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
-from django.core.cache import cache
 from django.db import models
 from django.db import IntegrityError
 from django.template.defaultfilters import filesizeformat
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import smart_unicode
+from django.utils import importlib
 
 from ixxy_url_field.choice_with_other import ChoiceWithOtherField
 
@@ -27,18 +27,11 @@ class IxxyURLField(models.CharField):
             'form_class': IxxyURLFormField,
         }
         defaults.update(kwargs)
-        cache_key = 'get_linklist_context'
-        linklists = cache.get(cache_key)
-        if not linklists:
-            from cms.admin_views import get_linklist_context
-            linklists = get_linklist_context()
-            cache.set(cache_key, linklists)
-        choices = []
-        keys = ['links', 'documents', 'secure_documents', ]
-        for key in keys:
-            choices.extend([(link[1], link[0]) for link in linklists[key] or []])
-            choices.append(['', ''])
-        
+        from django.conf import settings 
+        mod_path, func_name = settings.URL_CHOICES_FUNC.rsplit('.', 1)
+        mod = importlib.import_module(mod_path)
+        choices_func = getattr(mod, func_name)        
+        choices = choices_func()
         required = not self.blank
         return ChoiceWithOtherField(choices=choices, required=required)
 
