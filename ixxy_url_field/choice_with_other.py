@@ -2,7 +2,8 @@ from django import forms
 from django.conf import settings
 from django.utils.encoding import force_unicode
 
-OTHER_CHOICE = ''
+OTHER_CHOICE = '__other__'
+OTHER_CHOICE_DISPLAY = '' # 'Other:'
 
 class ChoiceWithOtherWidget(forms.MultiWidget):
     """MultiWidget for use with ChoiceWithOtherField."""
@@ -46,7 +47,7 @@ class ChoiceWithOtherField(forms.MultiValueField):
                 break
         if not has_empty_choice:
             choices.insert(0, ('', '---------'))
-        #choices.append((OTHER_CHOICE, 'Other: '))
+        choices.append((OTHER_CHOICE, OTHER_CHOICE_DISPLAY))
         fields = [
             forms.ChoiceField(choices=choices),
             forms.CharField(required=False)
@@ -62,8 +63,9 @@ class ChoiceWithOtherField(forms.MultiValueField):
         if not value:
             return ''
 
-        if force_unicode(value[0]) == OTHER_CHOICE:
-            return value[1]
-        else:
-            return value[0]
+        return value[1] #Only ever take the value from the text field. The select menu is now just a way to correctly fill in the text field.
+        #if force_unicode(value[0]) == OTHER_CHOICE:
+        #    return value[1]
+        #else:
+        #    return value[0]
 

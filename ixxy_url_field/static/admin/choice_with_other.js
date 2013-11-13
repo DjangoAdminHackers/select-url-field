@@ -6,15 +6,24 @@
             var select = $('select', this);
             var text_input = $('input', this);
             select.change(function(){
-                text_input.val(select.val());
-//                if(!(select.val() == OTHER_CHOICE)){
-//                    text_input.show();
-//                }else{
-//                    text_input.show();
-//                }
+                if(select.val() == OTHER_CHOICE){
+                    ;
+                }else{
+                    text_input.val(select.val());
+                }
             });
             text_input.keyup(function(){
-                select.val(text_input.val());
+                var match = false;
+                $(select).find('option').each(function(){
+                    if($(this).attr('value') == text_input.val()){
+                        match = true;
+                    }
+                })
+                if(!match){
+                    select.val(OTHER_CHOICE);
+                }else{
+                    select.val(text_input.val());
+                }
             });
             select.change();
         })
