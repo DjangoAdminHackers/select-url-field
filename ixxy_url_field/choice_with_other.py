@@ -63,9 +63,5 @@ class ChoiceWithOtherField(forms.MultiValueField):
         if not value:
             return ''
 
-        return value[1] #Only ever take the value from the text field. The select menu is now just a way to correctly fill in the text field.
-        #if force_unicode(value[0]) == OTHER_CHOICE:
-        #    return value[1]
-        #else:
-        #    return value[0]
+        return value[1] #value[0] is ignored. Only ever take the value from the text field. The select menu is now just a way to correctly fill in the text field.
 
