@@ -1,15 +1,16 @@
 import re
-import os.path
 
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from django.db import models
-from django.db import IntegrityError
-from django.template.defaultfilters import filesizeformat
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import smart_unicode
-from django.utils import importlib
+try:
+    from importlib import import_module
+except ImportError:
+    # Django < 1.9 and Python < 2.7
+    from django.utils.importlib import import_module
 
 from select_url_field.choice_with_other import ChoiceWithOtherField
 
@@ -18,7 +19,7 @@ class SelectURLField(models.CharField):
 
     def __init__(self, verbose_name=None, name=None, **kwargs):
         kwargs['max_length'] = kwargs.get('max_length', 200)
-        # handle choices option:
+        # Handle choices option:
         # from custom_site.url_choices import get_url_choices
         # link = SelectURLField(blank=True, choices=get_url_choices)
         self._has_choices = False
@@ -35,8 +36,8 @@ class SelectURLField(models.CharField):
             'form_class': SelectURLFormField,
         }
         defaults.update(kwargs)
-        ## when choices given, use them. 
-        ## when not, use global settings. 
+        # When choices given, use them. 
+        # When not, use global settings 
         if self._has_choices:
             if callable(self._url_choices):
                 choices = self._url_choices()
@@ -46,7 +47,7 @@ class SelectURLField(models.CharField):
             from django.conf import settings 
             mod_path, func_name = settings.URL_CHOICES_FUNC.rsplit('.', 1)
             mod = importlib.import_module(mod_path)
-            choices_func = getattr(mod, func_name)        
+            choices_func = getattr(mod, func_name)
             choices = choices_func()
         required = not self.blank
         return ChoiceWithOtherField(choices=choices, required=required)
@@ -59,11 +60,10 @@ class SelectURLField(models.CharField):
             if domain:
                 domain_pattern = r'^(?:http|ftp)s?://' + domain
                 domain_regex = re.compile(domain_pattern, re.IGNORECASE)
-                #match = domain_regex.search(value)
                 value = domain_regex.sub('', value)
         return super(SelectURLField, self).to_python(value)
 
-#We need IxxyURLField so this is backwards compatible
+# We need IxxyURLField so this is backwards compatible
 IxxyURLField = SelectURLField
 
 class SelectURLValidator(object):
@@ -75,10 +75,10 @@ class SelectURLValidator(object):
         
     def __call__(self, value):
         try:
-            #OK if it's a valid url 
+            # OK if it's a valid url 
             self.url_validator(value)
         except ValidationError, e:
-            #Not a valid url, see it's a path 
+            # Not a valid url, see it's a path 
             if not self.regex.search(smart_unicode(value)):
                 raise e
 
@@ -91,7 +91,9 @@ class SelectURLFormField(forms.CharField):
         super(SelectURLFormField, self).__init__(max_length, min_length, *args, **kwargs)
         self.validators.append(SelectURLValidator())
 
-
-from south.modelsinspector import add_introspection_rules
-add_introspection_rules([], ["^select_url_field\.fields\.IxxyURLField"])
-add_introspection_rules([], ["^select_url_field\.fields\.SelectURLField"])
+try:
+    from south.modelsinspector import add_introspection_rules
+    add_introspection_rules([], ["^select_url_field\.fields\.IxxyURLField"])
+    add_introspection_rules([], ["^select_url_field\.fields\.SelectURLField"])
+except ImportError:
+    pass
