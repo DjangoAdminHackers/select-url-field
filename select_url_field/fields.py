@@ -12,7 +12,9 @@ except ImportError:
     # Django < 1.9 and Python < 2.7
     from django.utils.importlib import import_module
 
+
 from select_url_field.choice_with_other import ChoiceWithOtherField
+
 
 class SelectURLField(models.CharField):
     description = _("URL")
@@ -52,7 +54,6 @@ class SelectURLField(models.CharField):
         required = not self.blank
         return ChoiceWithOtherField(choices=choices, required=required)
 
-
     def to_python(self, value):
         from django.conf import settings
         if value:
@@ -63,10 +64,13 @@ class SelectURLField(models.CharField):
                 value = domain_regex.sub('', value)
         return super(SelectURLField, self).to_python(value)
 
+
 # We need IxxyURLField so this is backwards compatible
 IxxyURLField = SelectURLField
 
+
 class SelectURLValidator(object):
+    
     code = 'invalid'
     regex = re.compile(r'(?:[/?]\S+)$', re.IGNORECASE)
 
@@ -75,12 +79,13 @@ class SelectURLValidator(object):
         
     def __call__(self, value):
         try:
-            # OK if it's a valid url 
+            # OK if it's a valid url
             self.url_validator(value)
         except ValidationError, e:
-            # Not a valid url, see it's a path 
+            # Not a valid url, see it's a path
             if not self.regex.search(smart_unicode(value)):
                 raise e
+
 
 class SelectURLFormField(forms.CharField):
     default_error_messages = {
@@ -90,6 +95,7 @@ class SelectURLFormField(forms.CharField):
     def __init__(self, max_length=None, min_length=None, *args, **kwargs):
         super(SelectURLFormField, self).__init__(max_length, min_length, *args, **kwargs)
         self.validators.append(SelectURLValidator())
+
 
 try:
     from south.modelsinspector import add_introspection_rules
