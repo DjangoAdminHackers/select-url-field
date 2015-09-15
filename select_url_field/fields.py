@@ -1,6 +1,7 @@
 import re
 
 from django import forms
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from django.db import models
@@ -97,9 +98,7 @@ class SelectURLFormField(forms.CharField):
         self.validators.append(SelectURLValidator())
 
 
-try:
+if 'south' in settings.INSTALLED_APPS:
     from south.modelsinspector import add_introspection_rules
     add_introspection_rules([], ["^select_url_field\.fields\.IxxyURLField"])
     add_introspection_rules([], ["^select_url_field\.fields\.SelectURLField"])
-except ImportError:
-    pass
