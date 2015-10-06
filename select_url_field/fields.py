@@ -39,8 +39,8 @@ class SelectURLField(models.CharField):
             'form_class': SelectURLFormField,
         }
         defaults.update(kwargs)
-        # When choices given, use them. 
-        # When not, use global settings 
+        # When choices given, use them
+        # When not, use global settings
         if self._has_choices:
             if callable(self._url_choices):
                 choices = self._url_choices()
@@ -49,7 +49,7 @@ class SelectURLField(models.CharField):
         else:
             from django.conf import settings 
             mod_path, func_name = settings.URL_CHOICES_FUNC.rsplit('.', 1)
-            mod = importlib.import_module(mod_path)
+            mod = import_module(mod_path)
             choices_func = getattr(mod, func_name)
             choices = choices_func()
         required = not self.blank
