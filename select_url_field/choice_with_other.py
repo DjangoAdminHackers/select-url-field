@@ -30,15 +30,15 @@ class ChoiceWithOtherWidget(forms.MultiWidget):
 
     def format_output(self, rendered_widgets):
         
-        """Format the output by substituting the "other" choice into the first widget."""
+        """Format the output by substituting the "other" choice into the first widget"""
         
-        return '<div class="choice_with_other_wrapper">%s %s</div>' % \
-            (rendered_widgets[0], rendered_widgets[1])
+        return u'<div class="choice_with_other_wrapper" style="display: table-row;">{} {}</div>'.format(
+            rendered_widgets[0],
+            rendered_widgets[1],
+        )
 
     def _media(self):
-        js_list = ['%sadmin/choice_with_other.js' % settings.STATIC_URL, ]
-        return forms.Media(js=js_list)
-    
+        return forms.Media(js=('admin/choice_with_other.js',))
     media = property(_media)
 
 
