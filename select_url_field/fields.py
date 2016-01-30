@@ -7,6 +7,7 @@ from django.core.validators import URLValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import smart_unicode
+
 try:
     from importlib import import_module
 except ImportError:

@@ -1,12 +1,15 @@
 from django import forms
 from django.conf import settings
-from django.utils.encoding import force_unicode
+
 
 OTHER_CHOICE = '__other__'
-OTHER_CHOICE_DISPLAY = '' # 'Other:'
+OTHER_CHOICE_DISPLAY = ''  # 'Other:'
+
 
 class ChoiceWithOtherWidget(forms.MultiWidget):
-    """MultiWidget for use with ChoiceWithOtherField."""
+    
+    """MultiWidget for use with ChoiceWithOtherField"""
+    
     def __init__(self, choices, attrs=None):
         widgets = [
             forms.Select(choices=choices),
@@ -26,13 +29,16 @@ class ChoiceWithOtherWidget(forms.MultiWidget):
         return ['', '']
 
     def format_output(self, rendered_widgets):
+        
         """Format the output by substituting the "other" choice into the first widget."""
+        
         return '<div class="choice_with_other_wrapper">%s %s</div>' % \
             (rendered_widgets[0], rendered_widgets[1])
 
     def _media(self):
         js_list = ['%sadmin/choice_with_other.js' % settings.STATIC_URL, ]
         return forms.Media(js=js_list)
+    
     media = property(_media)
 
 
@@ -62,6 +68,8 @@ class ChoiceWithOtherField(forms.MultiValueField):
             raise forms.ValidationError(self.error_messages['required'])
         if not value:
             return ''
-
-        return value[1] #value[0] is ignored. Only ever take the value from the text field. The select menu is now just a way to correctly fill in the text field.
+        
+        # value[0] is ignored. Only ever take the value from the text field.
+        # The select menu is just a way to correctly fill in the text field.
+        return value[1]
 
