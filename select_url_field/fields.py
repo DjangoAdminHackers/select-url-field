@@ -7,6 +7,7 @@ from django.core.validators import URLValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import smart_unicode
+from select_url_field import select_url_field_settings
 
 try:
     from importlib import import_module
@@ -48,8 +49,7 @@ class SelectURLField(models.CharField):
             else:
                 choices = self._url_choices
         else:
-            from django.conf import settings 
-            mod_path, func_name = settings.URL_CHOICES_FUNC.rsplit('.', 1)
+            mod_path, func_name = select_url_field_settings.URL_CHOICES_FUNC.rsplit('.', 1)
             mod = import_module(mod_path)
             choices_func = getattr(mod, func_name)
             choices = choices_func()
