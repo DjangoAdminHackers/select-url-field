@@ -16,7 +16,7 @@ except ImportError:
     from django.utils.importlib import import_module
 
 
-from select_url_field.choice_with_other import ChoiceWithOtherField
+from .choice_with_other import ChoiceWithOtherField
 
 
 class SelectURLField(models.CharField):
@@ -53,6 +53,7 @@ class SelectURLField(models.CharField):
             mod = import_module(mod_path)
             choices_func = getattr(mod, func_name)
             choices = choices_func()
+            choices = [(x[1], x[0]) for x in choices]
         required = not self.blank
         return ChoiceWithOtherField(choices=choices, required=required)
 
