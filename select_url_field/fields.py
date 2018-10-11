@@ -6,8 +6,12 @@ from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.utils.encoding import smart_unicode
+try:
+    from django.utils.encoding import smart_unicode
+except ImportError:
+    from django.utils.encoding import smart_str as smart_unicode
 from select_url_field import select_url_field_settings
+import collections
 
 try:
     from importlib import import_module
@@ -44,7 +48,7 @@ class SelectURLField(models.CharField):
         # When choices given, use them
         # When not, use global settings
         if self._has_choices:
-            if callable(self._url_choices):
+            if isinstance(self._url_choices, collections.Callable):
                 choices = self._url_choices()
             else:
                 choices = self._url_choices
@@ -83,7 +87,7 @@ class SelectURLValidator(object):
         try:
             # OK if it's a valid url
             self.url_validator(value)
-        except ValidationError, e:
+        except ValidationError as e:
             # Not a valid url, see it's a path
             if not self.regex.search(smart_unicode(value)):
                 raise e
@@ -91,7 +95,7 @@ class SelectURLValidator(object):
 
 class SelectURLFormField(forms.CharField):
     default_error_messages = {
-        'invalid': _(u'Enter a valid URL.'),
+        'invalid': _('Enter a valid URL.'),
     }
 
     def __init__(self, max_length=None, min_length=None, *args, **kwargs):
