@@ -1,5 +1,6 @@
 from django import forms
 from django.conf import settings
+from django.utils.safestring import mark_safe
 
 
 OTHER_CHOICE = '__other__'
@@ -28,14 +29,15 @@ class ChoiceWithOtherWidget(forms.MultiWidget):
                 return [OTHER_CHOICE, value]
         return ['', '']
 
-    def format_output(self, rendered_widgets):
-        
+    def format_output(self, output):
         """Format the output by substituting the "other" choice into the first widget"""
-        
-        return u'<div class="choice_with_other_wrapper" style="display: table-row;">{} {}</div>'.format(
-            rendered_widgets[0],
-            rendered_widgets[1],
+        return '<div class="choice_with_other_wrapper" style="display: table-row;">{}</div>'.format(
+            output
         )
+
+    def render(self, name, value, attrs=None, renderer=None):
+        output = super(ChoiceWithOtherWidget, self).render(name, value, attrs=attrs, renderer=renderer)
+        return mark_safe(self.format_output(output))
 
     def _media(self):
         return forms.Media(js=('admin/choice_with_other.js',))
