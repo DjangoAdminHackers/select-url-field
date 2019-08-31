@@ -32,4 +32,4 @@
         })
 
     })
-})(django.jQuery);
+})($ || django.jQuery);
