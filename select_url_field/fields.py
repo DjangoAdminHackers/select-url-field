@@ -1,4 +1,5 @@
 import re
+import sys
 
 from django import forms
 from django.conf import settings
@@ -7,6 +8,7 @@ from django.core.validators import URLValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import smart_unicode
+from django.db.utils import OperationalError
 from select_url_field import select_url_field_settings
 
 try:
@@ -52,7 +54,13 @@ class SelectURLField(models.CharField):
             mod_path, func_name = select_url_field_settings.URL_CHOICES_FUNC.rsplit('.', 1)
             mod = import_module(mod_path)
             choices_func = getattr(mod, func_name)
-            choices = choices_func()
+            try:
+                choices = choices_func()
+            except OperationalError:
+                # We might have problem getting the choices while applying migrations.
+                # Safe to ignore it.
+                if 'migrate' in sys.argv:
+                    choices = []
         required = not self.blank
         return ChoiceWithOtherField(choices=choices, required=required)
 
