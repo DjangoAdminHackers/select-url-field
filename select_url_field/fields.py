@@ -83,7 +83,7 @@ class SelectURLValidator(object):
         try:
             # OK if it's a valid url
             self.url_validator(value)
-        except ValidationError, e:
+        except ValidationError as e:
             # Not a valid url, see it's a path
             if not self.regex.search(smart_unicode(value)):
                 raise e
