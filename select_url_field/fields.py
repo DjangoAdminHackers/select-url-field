@@ -5,8 +5,8 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
-from django.utils.encoding import smart_unicode
+from django.utils.translation import gettext_lazy as _
+from django.utils.encoding import smart_str as smart_unicode
 from select_url_field import select_url_field_settings
 
 try:
