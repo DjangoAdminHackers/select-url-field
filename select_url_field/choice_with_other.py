@@ -9,6 +9,8 @@ OTHER_CHOICE_DISPLAY = ''  # 'Other:'
 class ChoiceWithOtherWidget(forms.MultiWidget):
     
     """MultiWidget for use with ChoiceWithOtherField"""
+
+    template_name = 'admin/widgets/choice_with_other.html'
     
     def __init__(self, choices, attrs=None):
         widgets = [
@@ -28,14 +30,7 @@ class ChoiceWithOtherWidget(forms.MultiWidget):
                 return [OTHER_CHOICE, value]
         return ['', '']
 
-    def format_output(self, rendered_widgets):
-        
-        """Format the output by substituting the "other" choice into the first widget"""
-        
-        return u'<div class="choice_with_other_wrapper" style="display: table-row;">{} {}</div>'.format(
-            rendered_widgets[0],
-            rendered_widgets[1],
-        )
+
 
     def _media(self):
         return forms.Media(js=('admin/choice_with_other.js',))
