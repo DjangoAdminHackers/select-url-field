@@ -98,8 +98,3 @@ class SelectURLFormField(forms.CharField):
         super(SelectURLFormField, self).__init__(max_length, min_length, *args, **kwargs)
         self.validators.append(SelectURLValidator())
 
-
-if 'south' in settings.INSTALLED_APPS:
-    from south.modelsinspector import add_introspection_rules
-    add_introspection_rules([], ["^select_url_field\.fields\.IxxyURLField"])
-    add_introspection_rules([], ["^select_url_field\.fields\.SelectURLField"])
