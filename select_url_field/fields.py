@@ -16,7 +16,7 @@ except ImportError:
     from django.utils.importlib import import_module
 
 
-from .choice_with_other import ChoiceWithOtherField
+from .choice_with_other import ChoiceWithOtherField, AjaxSelectURLWidget
 
 
 class SelectURLField(models.CharField):
@@ -95,3 +95,28 @@ class SelectURLFormField(forms.CharField):
     def __init__(self, max_length=None, min_length=None, *args, **kwargs):
         super(SelectURLFormField, self).__init__(max_length, min_length, *args, **kwargs)
         self.validators.append(SelectURLValidator())
+
+
+class AjaxSelectURLField(models.CharField):
+    """
+    from select_url_field.fields import SelectURLField, AjaxSelectURLField
+
+    link = AjaxSelectURLField(null=True, blank=True, max_length=255)
+
+    Add cutom_site.admin_views.select_url_choices and its url.
+    """
+
+    description = "Ajax version of SelectURLField"
+
+    def formfield(self, **kwargs):
+        print(kwargs)
+        widget = AjaxSelectURLWidget()
+        kwargs.update({"widget": AjaxSelectURLWidget})
+        print(kwargs)
+        return super().formfield(**kwargs)
+
+    def __init__(self, verbose_name=None, name=None, **kwargs):
+        kwargs["max_length"] = kwargs.get("max_length", 255)
+        models.CharField.__init__(self, verbose_name, name, **kwargs)
+        self.validators.append(SelectURLValidator())
+

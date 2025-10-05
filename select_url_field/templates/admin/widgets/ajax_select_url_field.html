@@ -1,0 +1,5 @@
+{% spaceless %}
+<div class="choice_with_other_wrapper" style="display: table-row;">
+    <input class="ajax-select-url" type="{{ widget.type }}" name="{{ widget.name }}"{% if widget.value != None %} value="{{ widget.value }}"{% endif %}{% include "django/forms/widgets/attrs.html" %}=>
+</div>
+{% endspaceless %}

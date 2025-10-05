@@ -56,3 +56,12 @@ class ChoiceWithOtherField(forms.MultiValueField):
         # value[0] is ignored. Only ever take the value from the text field.
         # The select menu is just a way to correctly fill in the text field.
         return value[1]
+
+
+class AjaxSelectURLWidget(forms.TextInput):
+    """Plain text input that upgrades itself to a grouped <select> via Ajax."""
+    template_name = "admin/widgets/ajax_select_url_field.html"
+
+    def _media(self):
+        return forms.Media(js=("admin/choice_with_other.js", "admin/ajax_url_select_field.js",))
+    media = property(_media)
