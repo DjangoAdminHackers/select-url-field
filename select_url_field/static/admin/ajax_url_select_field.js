@@ -14,22 +14,31 @@
     function buildSelect(data, currentVal) {
         var $sel = $('<select>', { 'class': 'ajax-select-url-select' });
         $sel.append('<option value="">---------</option>')
+        var got_selected = false;
         $.each(data, function (_, group) {
             var $og = $('<optgroup>', { label: group.group_name });
             $.each(group.group_choices, function (_, opt) {
                 /* opt = [label, value] */
                 var val = opt[1];
+                var selected = (val === currentVal);
                 $og.append(
                     $('<option>', {
                         text:  opt[0],
                         value: val,
-                        selected: (val === currentVal)   // keep existing value
+                        selected: selected   // keep existing value
                     })
                 );
+                if(selected){
+                    got_selected = true;
+                }
             });
             $sel.append($og);
         });
-        $sel.append('<option value="__other__"></option>')
+        if(got_selected){
+            $sel.append('<option value="__other__"></option>')
+        }else{
+            $sel.append('<option value="__other__" selected=""></option>')
+        }
         return $sel;
     }
 
