@@ -63,5 +63,5 @@ class AjaxSelectURLWidget(forms.TextInput):
     template_name = "admin/widgets/ajax_select_url_field.html"
 
     def _media(self):
-        return forms.Media(js=("admin/choice_with_other.js", "admin/ajax_url_select_field.js",))
+        return forms.Media(js=("admin/choice_with_other.js", "admin/ajax_url_select_field_v2.js",))
     media = property(_media)
