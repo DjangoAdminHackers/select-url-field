@@ -39,7 +39,6 @@
         $input.addClass('upgraded');
         $input.attr({"size": "80"});
         var currentVal = $input.val();
-        console.log(currentVal)
         getChoices().done(function (data) {
             var $select = buildSelect(data, currentVal);
 
