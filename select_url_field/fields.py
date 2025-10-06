@@ -103,7 +103,9 @@ class AjaxSelectURLField(models.CharField):
 
     link = AjaxSelectURLField(null=True, blank=True, max_length=255)
 
-    Add cutom_site.admin_views.select_url_choices and its url.
+    In urls.py:
+    # SelectURL choices
+    re_path(r"^select-url-choices/", include("select_url_field.admin_urls")),
     """
 
     description = "Ajax version of SelectURLField"
